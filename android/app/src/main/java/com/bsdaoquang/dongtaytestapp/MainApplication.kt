@@ -1,4 +1,4 @@
-package com.testapp
+package com.bsdaoquang.dongtaytestapp
 
 import android.app.Application
 import com.facebook.react.PackageList
