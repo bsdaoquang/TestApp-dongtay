@@ -1,0 +1,15 @@
+export const thanhtoanData = [
+  {
+    DUANID: '20230224141201_5E7055F3',
+    HOPDONGID: '20240503084318_8D922E66',
+    LOAIPHIEUID: 'IsPMS_HopDongKhoiLuongKeHoachThiCong',
+    PHIEUID: '20240503084600_9DF0E059',
+    LOAINXID: 'thanhtoanthucte',
+    STT: '001',
+    NGAYCHUNGTU: '2024-05-03',
+    TENKH: 'BAN QUẢN LÝ ĐTXD CÔNG TRÌNH',
+    TINHTRANGID: 'ChoDuyet',
+    TENTINHTRANG: 'KHỞI TẠO',
+    TIENLAMTRON: 1019900000.0,
+  },
+];

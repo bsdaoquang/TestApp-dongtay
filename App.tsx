@@ -1,19 +1,19 @@
+import { NavigationContainer } from '@react-navigation/native';
 import React, { useEffect } from 'react';
-import { SafeAreaView, SafeAreaViewBase, StatusBar, View } from 'react-native';
+import { StatusBar, View } from 'react-native';
+import Toast, { BaseToast } from 'react-native-toast-message';
+import { Provider } from 'react-redux';
 import { colors } from './src/constants/colors';
+import { fontFamilies } from './src/constants/fontFamilies';
 import Routers from './src/navigations/Routers';
 import { store } from './src/store/store';
-import { Provider } from 'react-redux';
-import { NavigationContainer } from '@react-navigation/native';
-import Toast, { BaseToast } from 'react-native-toast-message';
 import { globalStyles } from './src/styles/globalStyle';
-import { fontFamilies } from './src/constants/fontFamilies';
+import { Notifications } from './src/utils/notifications';
 
 const App = () => {
   useEffect(() => {
-    // StatusBar.setBarStyle('dark-content');
-    // StatusBar.setBackgroundColor(colors.bg);
     StatusBar.setHidden(true);
+    Notifications.CheckPermision();
   }, []);
 
   const toastConfig = {
@@ -66,7 +66,7 @@ const App = () => {
           style={{
             flex: 1,
             backgroundColor: colors.bg,
-            paddingBottom: StatusBar.currentHeight,
+            paddingBottom: (StatusBar.currentHeight ?? 0) + 22,
           }}
         >
           <Routers />

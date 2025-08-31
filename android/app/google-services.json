@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "538891466561",
+    "project_id": "testapp-dongtay",
+    "storage_bucket": "testapp-dongtay.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:538891466561:android:7ffee481be2800c3c593c0",
+        "android_client_info": {
+          "package_name": "com.bsdaoquang.dongtaytestapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdV5gzVbI3-sd7TO5hTDBoBjfY08KtrX0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

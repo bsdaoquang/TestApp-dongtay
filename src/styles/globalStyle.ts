@@ -87,4 +87,12 @@ export const globalStyles = StyleSheet.create({
     padding: 16,
     minHeight: 50,
   },
+
+  card: {
+    backgroundColor: colors.bg,
+    borderRadius: 10,
+    padding: 12,
+    borderWidth: 1,
+    borderColor: colors.primary,
+  },
 });

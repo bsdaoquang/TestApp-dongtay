@@ -12,10 +12,12 @@ export interface TextComponentProps {
   size?: number;
   fontWeight?: TextStyle['fontWeight'];
   font?: string;
+  numberOfLines?: number;
 }
 
 const TextComponent = (props: TextComponentProps) => {
-  const { text, type, styles, color, size, fontWeight, font } = props;
+  const { text, type, styles, color, size, fontWeight, font, numberOfLines } =
+    props;
 
   const style = {
     ...(type === 'title'
@@ -29,7 +31,14 @@ const TextComponent = (props: TextComponentProps) => {
     ...(font ? { fontFamily: font } : {}),
   };
 
-  return <Text style={[globalStyles.text, style, styles]}>{text}</Text>;
+  return (
+    <Text
+      numberOfLines={numberOfLines}
+      style={[globalStyles.text, style, styles]}
+    >
+      {text}
+    </Text>
+  );
 };
 
 export default TextComponent;

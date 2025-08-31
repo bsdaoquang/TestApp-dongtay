@@ -37,7 +37,6 @@ const Login = ({ navigation }: any) => {
   }, [email, password]);
 
   const handleLogin = async () => {
-    console.log(email, password);
     setIsLoading(true);
     try {
       if (!email || !password) {

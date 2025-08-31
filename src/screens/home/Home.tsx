@@ -1,16 +1,70 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { HamburgerMenu, Notification } from 'iconsax-react-nativejs';
-import React from 'react';
-import { TouchableOpacity } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import {
+  ActivityIndicator,
+  FlatList,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { Container, TextComponent } from '../../components';
+import {
+  Container,
+  ProjectItem,
+  Row,
+  Section,
+  TextComponent,
+} from '../../components';
 import { colors } from '../../constants/colors';
 import { fontFamilies } from '../../constants/fontFamilies';
-import { authSelector, removeAuth } from '../../store/reducers/authReducer';
+import { readDocs } from '../../firebase/server';
+import { authSelector } from '../../store/reducers/authReducer';
+import { ProjectModel } from '../../models/ProjectModel';
 
 const Home = ({ navigation }: any) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [projects, setProjects] = useState<ProjectModel[]>([]);
+  const [totalItems, setTotalItems] = useState(0);
+  const [isLoadmore, setIsLoadmore] = useState(false);
+  const [limit, setLimit] = useState(20);
   const user = useSelector(authSelector);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    getProjects();
+  }, []);
+
+  // Get projects
+  const getProjects = async () => {
+    setIsLoading(true);
+    try {
+      const data: { items: ProjectModel[]; totalItems: number } =
+        await readDocs({ collection: 'duan', limit });
+      setProjects(data.items);
+      setTotalItems(data.totalItems);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Handle load more projects
+  const handleLoadmore = async () => {
+    if (projects.length >= totalItems) return;
+    setIsLoadmore(true);
+    try {
+      const newLimit = limit + 20;
+      const data: { items: ProjectModel[]; totalItems: number } =
+        await readDocs({ collection: 'duan', limit: newLimit });
+      setProjects(data.items);
+      setLimit(newLimit);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoadmore(false);
+    }
+  };
+
   return (
     <Container
       navigation={navigation}
@@ -27,22 +81,41 @@ const Home = ({ navigation }: any) => {
       }
       footer={
         <TextComponent
-          text={`Số lượng dự án: `}
+          text={`Số lượng dự án: ${projects.length}/${totalItems}`}
           font={fontFamilies.bold}
           size={16}
           color={colors.text}
         />
       }
     >
-      <TextComponent text={user?.name ?? 'Họ tên'} />
-      <TouchableOpacity
-        onPress={async () => {
-          await AsyncStorage.clear();
-          dispatch(removeAuth({}));
-        }}
-      >
-        <TextComponent text="Logout" />
-      </TouchableOpacity>
+      {isLoading ? (
+        <Section justifyContent="center" alignItems="center" flex={1}>
+          <View>
+            <ActivityIndicator color={colors.description} />
+          </View>
+          <TextComponent
+            text="Đang tải dữ liệu..."
+            styles={{ marginLeft: 8 }}
+          />
+        </Section>
+      ) : (
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          data={projects}
+          ListEmptyComponent={
+            <Section>
+              <TextComponent text="Không có dự án nào" />
+            </Section>
+          }
+          ListFooterComponent={
+            isLoadmore ? <ActivityIndicator color={colors.description} /> : null
+          }
+          onEndReached={handleLoadmore}
+          onEndReachedThreshold={0.5}
+          renderItem={({ item }) => <ProjectItem project={item} />}
+          keyExtractor={item => item.id}
+        />
+      )}
     </Container>
   );
 };
