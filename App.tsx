@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { StatusBar } from 'react-native';
+import { SafeAreaView, SafeAreaViewBase, StatusBar, View } from 'react-native';
 import { colors } from './src/constants/colors';
 import Routers from './src/navigations/Routers';
 import { store } from './src/store/store';
@@ -11,8 +11,9 @@ import { fontFamilies } from './src/constants/fontFamilies';
 
 const App = () => {
   useEffect(() => {
-    StatusBar.setBarStyle('dark-content');
-    StatusBar.setBackgroundColor(colors.bg);
+    // StatusBar.setBarStyle('dark-content');
+    // StatusBar.setBackgroundColor(colors.bg);
+    StatusBar.setHidden(true);
   }, []);
 
   const toastConfig = {
@@ -61,7 +62,15 @@ const App = () => {
   return (
     <Provider store={store}>
       <NavigationContainer>
-        <Routers />
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: colors.bg,
+            paddingBottom: StatusBar.currentHeight,
+          }}
+        >
+          <Routers />
+        </View>
         <Toast config={toastConfig} />
       </NavigationContainer>
     </Provider>

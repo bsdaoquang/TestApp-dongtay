@@ -15,11 +15,13 @@ export interface SectionProps {
     | 'space-between'
     | 'space-around';
   alignItems?: 'flex-start' | 'center' | 'flex-end' | 'stretch';
+  flex?: number;
 }
 
 const Section = ({
   children,
   padding,
+  flex,
   margin,
   backgroundColor,
   justifyContent,
@@ -36,6 +38,7 @@ const Section = ({
           backgroundColor,
           justifyContent: justifyContent ?? 'flex-start',
           alignItems: alignItems ?? 'stretch',
+          flex: flex ?? 0,
         },
         styles,
       ]}

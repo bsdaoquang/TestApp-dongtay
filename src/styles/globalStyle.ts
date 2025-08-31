@@ -81,4 +81,10 @@ export const globalStyles = StyleSheet.create({
     lineHeight: 24,
     color: `${colors.text}cc`,
   },
+
+  header: {
+    backgroundColor: colors.primary,
+    padding: 16,
+    minHeight: 50,
+  },
 });
