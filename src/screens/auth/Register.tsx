@@ -6,7 +6,6 @@ import {
   Platform,
   ScrollView,
   StyleSheet,
-  ToastAndroid,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -20,6 +19,9 @@ import {
   TextComponent,
 } from '../../components';
 import { colors } from '../../constants/colors';
+import { useDispatch } from 'react-redux';
+import { addAuth } from '../../store/reducers/authReducer';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Register = ({ navigation }: any) => {
   const [profile, setProfile] = useState({
@@ -28,6 +30,19 @@ const Register = ({ navigation }: any) => {
     password: '',
     phone: '',
   });
+  const dispatch = useDispatch();
+
+  const handleRegister = async () => {
+    try {
+      // Call your registration API here
+      if (profile.email && profile.password) {
+        dispatch(addAuth(profile));
+        await AsyncStorage.setItem('user', JSON.stringify(profile));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -94,9 +109,7 @@ const Register = ({ navigation }: any) => {
 
             <Button
               title="Đăng ký"
-              onPress={() =>
-                ToastAndroid.show('Đăng ký thành công', ToastAndroid.SHORT)
-              }
+              onPress={handleRegister}
               styles={{
                 marginTop: 30,
                 borderWidth: 1,
