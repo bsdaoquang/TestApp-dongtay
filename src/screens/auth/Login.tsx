@@ -90,6 +90,12 @@ const Login = ({ navigation }: any) => {
               <TextComponent text="Quên mật khẩu?" />
             </TouchableOpacity>
           </Row>
+          <Row justify="center" style={{ marginTop: 30 }}>
+            <TextComponent text="Bạn chưa có tài khoản? " />
+            <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+              <TextComponent color={colors.primary} text="Đăng ký" />
+            </TouchableOpacity>
+          </Row>
         </Section>
       </ScrollView>
       <Row

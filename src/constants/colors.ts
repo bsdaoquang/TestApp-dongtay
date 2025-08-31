@@ -5,4 +5,6 @@ export const colors = {
   primary: '#A4C639',
   title: '#6A0101',
   placeholder: '#C1C3C5',
+  error: '#FF4D4F',
+  border: '#C1C3C5',
 };

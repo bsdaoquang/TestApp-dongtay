@@ -49,12 +49,11 @@ export const globalStyles = StyleSheet.create({
 
   containerInput: {
     borderWidth: 1,
-    borderColor: '#C1C3C5',
+    borderColor: colors.border,
     borderRadius: 15,
     paddingHorizontal: 8,
     paddingVertical: 4,
     height: 48,
-    marginBottom: 16,
   },
 
   inputStyle: {

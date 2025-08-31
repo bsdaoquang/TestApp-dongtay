@@ -11,6 +11,7 @@ import Row from './Row';
 import { globalStyles } from '../styles/globalStyle';
 import { colors } from '../constants/colors';
 import { CloseCircle, Eye, EyeSlash } from 'iconsax-react-nativejs';
+import TextComponent from './TextComponent';
 
 export interface InputProps {
   placeholder?: string;
@@ -20,6 +21,7 @@ export interface InputProps {
   styles?: TextStyle;
   password?: boolean;
   allowClear?: boolean;
+  required?: boolean;
 }
 
 const Input = (props: InputProps) => {
@@ -31,10 +33,15 @@ const Input = (props: InputProps) => {
     styles,
     password,
     allowClear,
+    required,
   } = props;
 
   const [isSecure, setIsSecure] = useState(password ? true : false);
   const [inputValue, setInputValue] = useState(value);
+  const [error, setError] = useState({
+    isError: false,
+    message: '',
+  });
 
   const handleClear = () => {
     setInputValue('');
@@ -42,33 +49,78 @@ const Input = (props: InputProps) => {
   };
 
   return (
-    <Row style={[globalStyles.containerInput, styles]}>
-      <TextInput
-        placeholder={placeholder}
-        placeholderTextColor={colors.placeholder}
-        value={inputValue}
-        onChangeText={setInputValue}
-        style={[globalStyles.inputStyle, inputStyle]}
-        secureTextEntry={isSecure}
-      />
-      {allowClear && inputValue.length > 0 && (
-        <TouchableOpacity onPress={handleClear}>
-          <CloseCircle size={18} variant="Linear" color={colors.description} />
-        </TouchableOpacity>
-      )}
-      {password && (
-        <TouchableOpacity onPress={() => setIsSecure(!isSecure)}>
+    <View style={{ marginBottom: 16 }}>
+      <Row
+        style={[
+          globalStyles.containerInput,
           {
-            /* EyeSlash icon when the password is hidden, Eye icon when it's visible */
-            !isSecure ? (
-              <EyeSlash size={18} variant="Linear" color={colors.description} />
-            ) : (
-              <Eye size={18} variant="Linear" color={colors.description} />
-            )
+            borderColor: error.isError ? colors.error : colors.border,
+          },
+          styles,
+        ]}
+      >
+        <TextInput
+          onFocus={() => {
+            if (error.isError) {
+              setError({
+                isError: false,
+                message: '',
+              });
+            }
+          }}
+          placeholder={required ? `* ${placeholder}` : placeholder}
+          placeholderTextColor={colors.placeholder}
+          value={inputValue}
+          onChangeText={setInputValue}
+          style={[globalStyles.inputStyle, inputStyle]}
+          secureTextEntry={isSecure}
+          onBlur={
+            required
+              ? () => {
+                  if (inputValue.trim().length === 0) {
+                    setError({
+                      isError: true,
+                      message: 'This field is required',
+                    });
+                  }
+                }
+              : undefined
           }
-        </TouchableOpacity>
+        />
+        {allowClear && inputValue.length > 0 && (
+          <TouchableOpacity onPress={handleClear}>
+            <CloseCircle
+              size={18}
+              variant="Linear"
+              color={colors.description}
+            />
+          </TouchableOpacity>
+        )}
+        {password && (
+          <TouchableOpacity onPress={() => setIsSecure(!isSecure)}>
+            {
+              /* EyeSlash icon when the password is hidden, Eye icon when it's visible */
+              !isSecure ? (
+                <EyeSlash
+                  size={18}
+                  variant="Linear"
+                  color={colors.description}
+                />
+              ) : (
+                <Eye size={18} variant="Linear" color={colors.description} />
+              )
+            }
+          </TouchableOpacity>
+        )}
+      </Row>
+      {error.isError && error.message.length > 0 && (
+        <TextComponent
+          styles={{ marginTop: 6 }}
+          text={error.message}
+          color={colors.error}
+        />
       )}
-    </Row>
+    </View>
   );
 };
 
