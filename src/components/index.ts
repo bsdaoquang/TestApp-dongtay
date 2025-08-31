@@ -11,6 +11,7 @@ import Row from './Row';
 import Section from './Section';
 import Space from './Space';
 import TextComponent from './TextComponent';
+import TimeLineItem from './TimeLineItem';
 
 export {
   Row,
@@ -26,4 +27,5 @@ export {
   Divider,
   PaymentItem,
   Col,
+  TimeLineItem,
 };

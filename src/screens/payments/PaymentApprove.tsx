@@ -9,6 +9,7 @@ import {
   Section,
   Space,
   TextComponent,
+  TimeLineItem,
 } from '../../components';
 import {
   PaymentModel,
@@ -16,7 +17,7 @@ import {
   TINHTRANGID,
 } from '../../models/PaymentModel';
 import { fontFamilies } from '../../constants/fontFamilies';
-import firestore from '@react-native-firebase/firestore';
+import firestore, { orderBy } from '@react-native-firebase/firestore';
 import {
   BitcointBag,
   Calendar,
@@ -28,6 +29,8 @@ import { getDateString } from '../../utils/datetime';
 import { colors } from '../../constants/colors';
 import { createDoc, updateDoc } from '../../firebase/server';
 import Toast from 'react-native-toast-message';
+import { HistoryModel } from '../../models/HistoryModel';
+import Timeline from 'react-native-timeline-flatlist';
 
 const PaymentApprove = ({ navigation, route }: any) => {
   /*
@@ -40,7 +43,7 @@ const PaymentApprove = ({ navigation, route }: any) => {
 
   const [payment, setPayment] = useState<PaymentModel | null>(null);
   const [isUpdating, setIsUpdating] = useState(false);
-  const [histories, setHistories] = useState<any[]>([]);
+  const [histories, setHistories] = useState<HistoryModel[]>([]);
 
   useEffect(() => {
     if (paymentId) {
@@ -62,16 +65,16 @@ const PaymentApprove = ({ navigation, route }: any) => {
   };
 
   const getHistoriesChangeStatus = () => {
+    // Sử dụng onSnapshot để lắng nghe realtime thay đổi của collection 'histories'
+
     firestore()
       .collection('histories')
       .where('paymentId', '==', paymentId)
-      .orderBy('createdAt', 'desc')
-      .onSnapshot(snapshot => {
-        if (snapshot && snapshot.docs) {
-          setHistories(snapshot.docs.map(doc => doc.data()));
-        } else {
-          setHistories([]);
-        }
+      .onSnapshot(querySnapshot => {
+        const historiesData = querySnapshot.docs.map(
+          doc => doc.data() as HistoryModel,
+        );
+        setHistories(historiesData);
       });
   };
 
@@ -86,7 +89,7 @@ const PaymentApprove = ({ navigation, route }: any) => {
         data: {
           TINHTRANGID: status,
           TENTINHTRANG: TENTINHTRANG[TINHTRANGID[status]],
-          updatedAt: firestore.FieldValue.serverTimestamp(),
+          updatedAt: Date.now(),
         },
       });
 
@@ -124,7 +127,7 @@ const PaymentApprove = ({ navigation, route }: any) => {
         userId: 'admin', // tạm thời hardcode userId, vì chưa có user
         oldStatus: payment.TINHTRANGID,
         newStatus: status,
-        createdAt: firestore.FieldValue.serverTimestamp(),
+        createdAt: Date.now(),
       };
 
       await createDoc({
@@ -233,10 +236,10 @@ const PaymentApprove = ({ navigation, route }: any) => {
           </Col>
         </Row>
       </Card>
-      <Card radius={0}>
+      <Card radius={0} styles={{ flex: 1 }}>
         <FlatList
-          data={[]}
-          renderItem={({ item }) => <TextComponent text="fafa" />}
+          data={histories}
+          renderItem={({ item }) => <TimeLineItem item={item} />}
         />
       </Card>
     </Container>
