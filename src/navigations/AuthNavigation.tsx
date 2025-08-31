@@ -1,6 +1,6 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
-import { Register } from '../screens';
+import { ForgotPass, Register } from '../screens';
 import TabNavigator from './TabNavigator';
 
 const AuthNavigation = () => {
@@ -14,6 +14,7 @@ const AuthNavigation = () => {
     >
       <Stack.Screen name="/" component={TabNavigator} />
       <Stack.Screen name="Register" component={Register} />
+      <Stack.Screen name="ForgotPass" component={ForgotPass} />
     </Stack.Navigator>
   );
 };
