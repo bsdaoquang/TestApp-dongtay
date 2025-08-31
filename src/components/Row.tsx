@@ -8,15 +8,24 @@ export interface RowProps {
   onPress?: () => void;
   justify?: FlexStyle['justifyContent'];
   align?: FlexStyle['alignItems'];
+  isWrap?: boolean;
 }
 
-const Row = ({ children, style, onPress, justify, align }: RowProps) => {
+const Row = ({
+  children,
+  style,
+  onPress,
+  justify,
+  align,
+  isWrap,
+}: RowProps) => {
   return onPress ? (
     <TouchableOpacity
       onPress={onPress}
       style={[
         globalStyles.row,
         {
+          flexWrap: isWrap ? 'wrap' : 'nowrap',
           justifyContent: justify || 'space-between',
           alignItems: align || 'center',
         },
@@ -30,6 +39,7 @@ const Row = ({ children, style, onPress, justify, align }: RowProps) => {
       style={[
         globalStyles.row,
         {
+          flexWrap: isWrap ? 'wrap' : 'nowrap',
           justifyContent: justify || 'space-between',
           alignItems: align || 'center',
         },

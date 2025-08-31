@@ -1,9 +1,11 @@
 import Button from './Button';
 import Card from './Card';
+import Col from './Col';
 import Container from './Container';
 import Divider from './Divider';
 import Input from './Input';
 import Loading from './Loading';
+import PaymentItem from './PaymentItem';
 import ProjectItem from './ProjectItem';
 import Row from './Row';
 import Section from './Section';
@@ -22,4 +24,6 @@ export {
   ProjectItem,
   Card,
   Divider,
+  PaymentItem,
+  Col,
 };

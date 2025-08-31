@@ -67,7 +67,6 @@ const Home = ({ navigation }: any) => {
 
   return (
     <Container
-      navigation={navigation}
       title={user?.name ?? 'Họ tên'}
       left={
         <TouchableOpacity onPress={() => navigation.toggleDrawer()}>

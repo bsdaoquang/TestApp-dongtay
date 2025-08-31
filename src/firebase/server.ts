@@ -14,7 +14,13 @@ type Query = {
   limit?: number;
 };
 
-const createDoc = async (collection: string, data: any) => {
+const createDoc = async ({
+  collection,
+  data,
+}: {
+  collection: string;
+  data: any;
+}) => {
   const ref = db.collection(collection);
   const docRef = await ref.add(data);
   const doc = await docRef.get();
@@ -42,11 +48,15 @@ const readDocs = async ({ collection, conditions = [], limit }: Query) => {
   return { items, totalItems };
 };
 
-const updateDoc = async (
-  collection: string,
-  docId: string,
-  data: Partial<any>,
-) => {
+const updateDoc = async ({
+  collection,
+  docId,
+  data,
+}: {
+  collection: string;
+  docId: string;
+  data: Partial<any>;
+}) => {
   const ref = db.collection(collection).doc(docId);
   await ref.update(data);
   const updated = await ref.get();

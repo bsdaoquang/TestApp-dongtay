@@ -6,6 +6,7 @@ import {
   PaymentApprove,
   PaymentDetail,
   ProjectDetail,
+  Search,
 } from '../screens';
 
 const HomeNavigation = () => {
@@ -22,6 +23,7 @@ const HomeNavigation = () => {
       <Stack.Screen name="ProjectDetail" component={ProjectDetail} />
       <Stack.Screen name="PaymentDetail" component={PaymentDetail} />
       <Stack.Screen name="PaymentApprove" component={PaymentApprove} />
+      <Stack.Screen name="Search" component={Search} />
     </Stack.Navigator>
   );
 };

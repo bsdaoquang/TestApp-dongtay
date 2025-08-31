@@ -8,6 +8,7 @@ import Notifications from './Notifications';
 import ProjectDetail from './ProjectDetail';
 import PaymentDetail from './payments/PaymentDetail';
 import PaymentApprove from './payments/PaymentApprove';
+import Search from './Search';
 
 export {
   Login,
@@ -20,4 +21,5 @@ export {
   ProjectDetail,
   PaymentDetail,
   PaymentApprove,
+  Search,
 };
