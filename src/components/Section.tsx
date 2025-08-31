@@ -8,6 +8,13 @@ export interface SectionProps {
   margin?: number;
   backgroundColor?: string;
   styles?: ViewStyle | null | undefined;
+  justifyContent?:
+    | 'flex-start'
+    | 'center'
+    | 'flex-end'
+    | 'space-between'
+    | 'space-around';
+  alignItems?: 'flex-start' | 'center' | 'flex-end' | 'stretch';
 }
 
 const Section = ({
@@ -15,6 +22,8 @@ const Section = ({
   padding,
   margin,
   backgroundColor,
+  justifyContent,
+  alignItems,
   styles,
 }: SectionProps) => {
   return (
@@ -25,6 +34,8 @@ const Section = ({
           padding: padding ?? 16,
           margin: margin ?? 0,
           backgroundColor,
+          justifyContent: justifyContent ?? 'flex-start',
+          alignItems: alignItems ?? 'stretch',
         },
         styles,
       ]}

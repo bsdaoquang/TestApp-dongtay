@@ -22,6 +22,7 @@ export interface InputProps {
   password?: boolean;
   allowClear?: boolean;
   required?: boolean;
+  keyboardType?: 'default' | 'email-address' | 'numeric' | 'phone-pad';
 }
 
 const Input = (props: InputProps) => {
@@ -34,6 +35,7 @@ const Input = (props: InputProps) => {
     password,
     allowClear,
     required,
+    keyboardType = 'default',
   } = props;
 
   const [isSecure, setIsSecure] = useState(password ? true : false);
@@ -60,6 +62,7 @@ const Input = (props: InputProps) => {
         ]}
       >
         <TextInput
+          keyboardType={keyboardType}
           onFocus={() => {
             if (error.isError) {
               setError({
