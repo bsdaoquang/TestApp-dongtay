@@ -1,97 +1,99 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# TestApp – DongTay
 
-# Getting Started
+## 1. Giới thiệu
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+Ứng dụng React Native (TypeScript) được phát triển theo yêu cầu đánh giá năng lực.  
+Chức năng chính:
 
-## Step 1: Start Metro
+- Đăng nhập / Đăng ký (giả lập, lưu user cục bộ).
+- Danh sách dự án (Projects) từ Firestore.
+- Danh sách đợt thanh toán (Payments) theo từng dự án.
+- Phê duyệt / Trả hồ sơ: cập nhật trạng thái và lưu lịch sử thay đổi (history).
+- Hiển thị timeline phê duyệt.
+- Push Notification qua Firebase Cloud Messaging (FCM).
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+## 2. Công nghệ sử dụng
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+- **React Native CLI** + TypeScript
+- **React Navigation** (stack, drawer)
+- **Redux Toolkit** + AsyncStorage (lưu login)
+- **@react-native-firebase/app, firestore, messaging**
+- Các thư viện UI: react-native-vector-icons, react-native-svg, react-native-reanimated, react-native-gesture-handler, …
 
-```sh
-# Using npm
-npm start
+## 3. Cấu trúc thư mục chính
 
-# OR using Yarn
-yarn start
+```
+src/
+  components/   # Button, Input, Card, Divider, Timeline...
+  navigations/  # AuthStack, AppStack
+  screens/      # Login, Register, Projects, Payments
+  services/     # firestore + notification
+  store/        # redux store, auth reducer
+  styles/        # tokens, global styles
 ```
 
-## Step 2: Build and run your app
+## 4. Cài đặt & chạy
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+### Yêu cầu môi trường
 
-### Android
+- Node.js + Yarn
+- Android Studio SDK 34
+- JDK 17
+- Gradle wrapper 8.x
 
-```sh
-# Using npm
-npm run android
+### Cài đặt
 
-# OR using Yarn
+```bash
+# clone repo
+git clone https://github.com/bsdaoquang/TestApp-dongtay
+cd TestApp-dongtay
+
+# cài dependencies
+yarn install
+
+# (iOS có thể bỏ qua theo yêu cầu)
+# android
+cd android && ./gradlew clean && cd ..
 yarn android
 ```
 
-### iOS
+## 5. Firebase
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
+Ứng dụng đã tích hợp với Firebase của tôi (đã cấu hình sẵn Firestore & FCM).  
+Khách hàng chỉ cần build APK, không cần cấu hình thêm.
 
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+> Nếu muốn thay đổi sang Firebase khác: thay file `google-services.json` trong `android/app/`.
 
-```sh
-bundle install
+## 6. Test chức năng
+
+1. **Đăng nhập / Đăng ký** → nhập thông tin bất kỳ, vào Home.
+2. **Projects** → hiển thị danh sách dự án từ Firestore.
+3. **Payments** → hiển thị danh sách thanh toán theo dự án.
+4. **Phê duyệt / Trả hồ sơ**:
+   - `Init → Pending → Approved`
+   - `Returned → Init`
+   - Mỗi lần đổi trạng thái sẽ lưu thêm một entry trong `history`.
+5. **Timeline**: hiển thị toàn bộ lịch sử phê duyệt.
+6. **Notification**:
+   - In-app toast khi đổi trạng thái.
+   - Test nhận push notification qua Firebase Console (sử dụng FCM token in logcat).
+
+## 7. Build file APK (Release)
+
+```bash
+cd android
+./gradlew assembleRelease
 ```
 
-Then, and every time you update your native dependencies, run:
+File nằm ở:
 
-```sh
-bundle exec pod install
+```
+android/app/build/outputs/apk/release/app-release.apk
 ```
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+## 8. Bàn giao
 
-```sh
-# Using npm
-npm run ios
-
-# OR using Yarn
-yarn ios
-```
-
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
-
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
-
-## Step 3: Modify your app
-
-Now that you have successfully run the app, let's make changes!
-
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
-
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
-
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+- File `app-release.apk` (đã ký)
+- Link repo GitHub: [TestApp-dongtay](https://github.com/bsdaoquang/TestApp-dongtay)
+- README.md (tài liệu này)
+- (Tuỳ chọn) video ngắn demo flow từ login → dự án → thanh toán → duyệt/trả hồ sơ → thông báo.

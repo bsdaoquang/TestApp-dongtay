@@ -43,7 +43,17 @@ const Button = (props: ButtonProps) => {
       ]}
     >
       {isLoading && <ActivityIndicator color={colors.bg} />}
-      <Text style={[globalStyles.buttonText, textStyles]}>{title}</Text>
+      <Text
+        style={[
+          globalStyles.buttonText,
+          {
+            fontSize: 16,
+          },
+          textStyles,
+        ]}
+      >
+        {title}
+      </Text>
     </TouchableOpacity>
   );
 };

@@ -1,3 +1,7 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import messaging, {
+  FirebaseMessagingTypes,
+} from '@react-native-firebase/messaging';
 import { HamburgerMenu, Notification } from 'iconsax-react-nativejs';
 import React, { useEffect, useState } from 'react';
 import {
@@ -6,25 +10,19 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import Toast from 'react-native-toast-message';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Container,
   ProjectItem,
-  Row,
   Section,
   TextComponent,
 } from '../../components';
 import { colors } from '../../constants/colors';
 import { fontFamilies } from '../../constants/fontFamilies';
 import { readDocs } from '../../firebase/server';
-import { authSelector, updateAuth } from '../../store/reducers/authReducer';
 import { ProjectModel } from '../../models/ProjectModel';
-import messaging, {
-  FirebaseMessagingTypes,
-  onMessage,
-} from '@react-native-firebase/messaging';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import Toast from 'react-native-toast-message';
+import { authSelector, updateAuth } from '../../store/reducers/authReducer';
 
 const Home = ({ navigation }: any) => {
   const [isLoading, setIsLoading] = useState(false);
