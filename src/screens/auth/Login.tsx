@@ -17,6 +17,8 @@ import { fontFamilies } from '../../constants/fontFamilies';
 import { addAuth } from '../../store/reducers/authReducer';
 import { globalStyles } from '../../styles/globalStyle';
 import { isValidEmail } from '../../utils/validate';
+import { Notifications } from '../../utils/notifications';
+import messaging from '@react-native-firebase/messaging';
 
 const Login = ({ navigation }: any) => {
   const [email, setEmail] = useState('');
@@ -58,6 +60,8 @@ const Login = ({ navigation }: any) => {
       }
 
       // save password
+      // Get FCM token and save to database, async local storage and database
+      // to push notifications
 
       if (isSavePass) {
         await AsyncStorage.setItem(

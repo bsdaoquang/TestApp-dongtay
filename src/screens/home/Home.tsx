@@ -17,8 +17,14 @@ import {
 import { colors } from '../../constants/colors';
 import { fontFamilies } from '../../constants/fontFamilies';
 import { readDocs } from '../../firebase/server';
-import { authSelector } from '../../store/reducers/authReducer';
+import { authSelector, updateAuth } from '../../store/reducers/authReducer';
 import { ProjectModel } from '../../models/ProjectModel';
+import messaging, {
+  FirebaseMessagingTypes,
+  onMessage,
+} from '@react-native-firebase/messaging';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Toast from 'react-native-toast-message';
 
 const Home = ({ navigation }: any) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -31,7 +37,31 @@ const Home = ({ navigation }: any) => {
 
   useEffect(() => {
     getProjects();
+    checkAndSaveFcmToken();
+
+    messaging().onMessage(
+      async (remoteMessage: FirebaseMessagingTypes.RemoteMessage) => {
+        const { notification } = remoteMessage;
+        Toast.show({
+          type: 'info',
+          text1: notification?.title,
+          text2: notification?.body,
+        });
+      },
+    );
   }, []);
+
+  const checkAndSaveFcmToken = async () => {
+    const fcmToken = await messaging().getToken();
+
+    if (user && fcmToken && user.fcmtoken !== fcmToken) {
+      dispatch(updateAuth({ ...user, fcmtoken: fcmToken }));
+      await AsyncStorage.setItem(
+        'user',
+        JSON.stringify({ ...user, fcmtoken: fcmToken }),
+      );
+    }
+  };
 
   // Get projects
   const getProjects = async () => {

@@ -8,7 +8,7 @@ export const globalStyles = StyleSheet.create({
     backgroundColor: colors.bg,
   },
   text: {
-    fontSize: 16,
+    fontSize: 14,
     color: colors.text,
   },
   center: {
