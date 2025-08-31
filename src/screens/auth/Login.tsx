@@ -1,16 +1,91 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import CheckBox from '@react-native-community/checkbox';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Image, ScrollView, TouchableOpacity, View } from 'react-native';
+import { useDispatch } from 'react-redux';
 import { FingerPrintOutline, QuocKy } from '../../../assets/icons';
-import { Button, Input, Row, Section, TextComponent } from '../../components';
+import {
+  Button,
+  Input,
+  Loading,
+  Row,
+  Section,
+  TextComponent,
+} from '../../components';
 import { colors } from '../../constants/colors';
 import { fontFamilies } from '../../constants/fontFamilies';
+import { addAuth } from '../../store/reducers/authReducer';
 import { globalStyles } from '../../styles/globalStyle';
+import { isValidEmail } from '../../utils/validate';
 
 const Login = ({ navigation }: any) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSavePass, setIsSavePass] = useState(true);
+  const [error, setError] = useState({
+    isError: false,
+    message: '',
+  });
+  const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    setError({
+      isError: false,
+      message: '',
+    });
+  }, [email, password]);
+
+  const handleLogin = async () => {
+    console.log(email, password);
+    setIsLoading(true);
+    try {
+      if (!email || !password) {
+        setError({ isError: true, message: 'Vui lòng nhập đầy đủ thông tin' });
+        return;
+      }
+
+      if (!isValidEmail(email)) {
+        setError({ isError: true, message: 'Email không hợp lệ' });
+        return;
+      }
+
+      if (password.length < 6) {
+        setError({
+          isError: true,
+          message: 'Mật khẩu phải có ít nhất 6 ký tự',
+        });
+        return;
+      }
+
+      // save password
+
+      if (isSavePass) {
+        await AsyncStorage.setItem(
+          'user',
+          JSON.stringify({
+            email,
+            password,
+          }),
+        );
+      }
+
+      // Call your login API here
+      dispatch(
+        addAuth({
+          email,
+          password,
+        }),
+      );
+    } catch (error) {
+      setError({
+        isError: true,
+        message: 'Đăng nhập không thành công. Vui lòng thử lại',
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <View style={[globalStyles.container]}>
@@ -63,10 +138,13 @@ const Login = ({ navigation }: any) => {
             placeholder="Mật khẩu"
             password
           />
+          {error.isError && (
+            <TextComponent text={error.message} color={colors.error} />
+          )}
           <Button
             styles={{ marginTop: 20 }}
             title="Đăng nhập"
-            onPress={() => {}}
+            onPress={handleLogin}
           />
           <Row justify="space-between">
             <Row onPress={() => setIsSavePass(!isSavePass)} align="center">
@@ -124,6 +202,7 @@ const Login = ({ navigation }: any) => {
           <FingerPrintOutline />
         </TouchableOpacity>
       </Row>
+      {isLoading && <Loading />}
     </View>
   );
 };

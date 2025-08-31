@@ -6,7 +6,7 @@ import {
   Button,
   TouchableOpacity,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Row from './Row';
 import { globalStyles } from '../styles/globalStyle';
 import { colors } from '../constants/colors';
@@ -44,6 +44,10 @@ const Input = (props: InputProps) => {
     isError: false,
     message: '',
   });
+
+  useEffect(() => {
+    onChange(inputValue);
+  }, [inputValue]);
 
   const handleClear = () => {
     setInputValue('');
