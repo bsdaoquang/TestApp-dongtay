@@ -7,29 +7,22 @@ import Loading from './Loading';
 import Row from './Row';
 import { fontFamilies } from '../constants/fontFamilies';
 import { colors } from '../constants/colors';
+import { useNavigation } from '@react-navigation/native';
 
 export interface ContainerProps {
   children: React.ReactNode;
   loading?: boolean;
   footer?: React.ReactNode;
   isScroll?: boolean;
-  navigation?: any;
   title?: string;
   extra?: React.ReactNode;
   left?: React.ReactNode;
+  back?: boolean;
 }
 
 const Container = (props: ContainerProps) => {
-  const {
-    children,
-    loading,
-    title,
-    footer,
-    isScroll,
-    navigation,
-    extra,
-    left,
-  } = props;
+  const { children, loading, title, footer, isScroll, back, extra, left } =
+    props;
 
   const renderChildren = isScroll ? (
     <ScrollView style={[globalStyles.container]}>{children}</ScrollView>
@@ -37,11 +30,13 @@ const Container = (props: ContainerProps) => {
     <View style={[globalStyles.container]}>{children}</View>
   );
 
+  const navigation = useNavigation();
+
   return (
     <View style={[globalStyles.container]}>
-      {left || (navigation && navigation.canGoBack()) || title || extra ? (
+      {left || back || title || extra ? (
         <Row style={[globalStyles.header]}>
-          {navigation && navigation.canGoBack() ? (
+          {back ? (
             <TouchableOpacity onPress={() => navigation.goBack()}>
               <ArrowLeft size={24} color="#000" />
             </TouchableOpacity>
@@ -65,8 +60,7 @@ const Container = (props: ContainerProps) => {
         </Row>
       ) : null}
       <Section flex={1}>{renderChildren}</Section>
-
-      <Row style={[globalStyles.header]}>{footer}</Row>
+      {footer && <Row style={[globalStyles.header]}>{footer}</Row>}
       {loading && <Loading />}
     </View>
   );

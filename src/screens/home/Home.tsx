@@ -75,7 +75,7 @@ const Home = ({ navigation }: any) => {
         </TouchableOpacity>
       }
       extra={
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Notifications')}>
           <Notification />
         </TouchableOpacity>
       }
@@ -112,7 +112,14 @@ const Home = ({ navigation }: any) => {
           }
           onEndReached={handleLoadmore}
           onEndReachedThreshold={0.5}
-          renderItem={({ item }) => <ProjectItem project={item} />}
+          renderItem={({ item }) => (
+            <ProjectItem
+              project={item}
+              onPress={() =>
+                navigation.navigate('PaymentDetail', { project: item })
+              }
+            />
+          )}
           keyExtractor={item => item.id}
         />
       )}

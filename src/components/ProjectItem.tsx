@@ -12,10 +12,11 @@ import Space from './Space';
 
 interface ProjectItemProps {
   project: ProjectModel;
+  onPress?: () => void;
 }
 
 const ProjectItem = (props: ProjectItemProps) => {
-  const { project } = props;
+  const { project, onPress } = props;
 
   const renderStatus = ({
     label,
@@ -25,21 +26,24 @@ const ProjectItem = (props: ProjectItemProps) => {
   }: {
     label: string;
     flex?: number;
-    value: string | number | undefined;
+    value?: string;
     extra?: React.ReactNode;
-  }) => (
-    <Row style={{ flex }} justify="space-between">
-      <TextComponent
-        size={14}
-        text={`${label}: ${value ? value : ''}`}
-        type="body"
-      />
-      {extra ? <Space width={8} /> : null} {extra ? extra : null}
-    </Row>
-  );
+  }) => {
+    return (
+      <Row style={{ flex }} justify="space-between">
+        <TextComponent
+          size={14}
+          numberOfLines={1}
+          text={`${label}: ${value ? value : ''}`}
+          type="body"
+        />
+        {extra ? <View style={{ marginLeft: 8 }}>{extra}</View> : null}
+      </Row>
+    );
+  };
 
   return (
-    <Card onPress={() => console.log(project)}>
+    <Card onPress={onPress}>
       <Row justify="center">
         <TextComponent
           text={project.TENDUAN}
@@ -74,7 +78,7 @@ const ProjectItem = (props: ProjectItemProps) => {
               <More variant="Outline" size={18} color={colors.text} />
             </TouchableOpacity>
           ),
-          flex: 3,
+          flex: 2,
         })}
       </Row>
       <Space height={16} />
@@ -87,12 +91,7 @@ const ProjectItem = (props: ProjectItemProps) => {
         {renderStatus({
           label: 'Tình trạng',
           value: `${project.TINHTRANGDUAN ?? ''}`,
-          extra: (
-            <TouchableOpacity>
-              <More variant="Outline" size={18} color={colors.text} />
-            </TouchableOpacity>
-          ),
-          flex: 3,
+          flex: 2,
         })}
       </Row>
     </Card>

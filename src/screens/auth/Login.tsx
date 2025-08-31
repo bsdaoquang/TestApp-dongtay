@@ -127,6 +127,8 @@ const Login = ({ navigation }: any) => {
         >
           <Input
             allowClear
+            autoCapitalize="none"
+            keyboardType="email-address"
             onChange={setEmail}
             value={email}
             placeholder="Email"

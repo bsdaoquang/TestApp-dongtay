@@ -66,7 +66,7 @@ const App = () => {
           style={{
             flex: 1,
             backgroundColor: colors.bg,
-            paddingBottom: (StatusBar.currentHeight ?? 0) + 22,
+            paddingBottom: (StatusBar.currentHeight ?? 0) + 15,
           }}
         >
           <Routers />

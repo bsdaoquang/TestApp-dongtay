@@ -53,7 +53,7 @@ export const globalStyles = StyleSheet.create({
     borderRadius: 15,
     paddingHorizontal: 8,
     paddingVertical: 4,
-    height: 48,
+    minHeight: 48,
   },
 
   inputStyle: {
@@ -61,6 +61,7 @@ export const globalStyles = StyleSheet.create({
     fontFamily: fontFamilies.regular,
     color: colors.text,
     // backgroundColor: 'coral',
+    fontSize: 14,
     width: '100%',
   },
 

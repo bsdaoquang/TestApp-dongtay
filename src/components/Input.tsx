@@ -22,6 +22,7 @@ export interface InputProps {
   password?: boolean;
   allowClear?: boolean;
   required?: boolean;
+  autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters';
   keyboardType?: 'default' | 'email-address' | 'numeric' | 'phone-pad';
 }
 
@@ -35,6 +36,7 @@ const Input = (props: InputProps) => {
     password,
     allowClear,
     required,
+    autoCapitalize = 'none',
     keyboardType = 'default',
   } = props;
 
@@ -75,6 +77,7 @@ const Input = (props: InputProps) => {
               });
             }
           }}
+          autoCapitalize={autoCapitalize}
           placeholder={required ? `* ${placeholder}` : placeholder}
           placeholderTextColor={colors.placeholder}
           value={inputValue}
