@@ -17,7 +17,6 @@ const DrawerNavigation = () => {
 
   const handleLogout = async () => {
     dispatch(removeAuth({}));
-    await AsyncStorage.clear();
   };
 
   return (
