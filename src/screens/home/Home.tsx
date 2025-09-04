@@ -54,9 +54,10 @@ const Home = ({ navigation }: any) => {
 
     if (user && fcmToken && user.fcmtoken !== fcmToken) {
       dispatch(updateAuth({ ...user, fcmtoken: fcmToken }));
+
       await AsyncStorage.setItem(
         'user',
-        JSON.stringify({ fcmtoken: fcmToken }),
+        JSON.stringify({ ...user, fcmtoken: fcmToken }),
       );
     }
   };

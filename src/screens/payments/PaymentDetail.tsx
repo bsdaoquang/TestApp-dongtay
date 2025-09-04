@@ -22,12 +22,16 @@ const PaymentDetail = ({ navigation, route }: any) => {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
 
   useEffect(() => {
-    project && project.MADUAN && getPaymentsByProjectId();
-  }, [project]);
+    const unsubscribe = navigation.addListener('focus', () => {
+      project && project.MADUAN && getPaymentsByProjectId();
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   // Get payments by project ID
   const getPaymentsByProjectId = async () => {
-    setIsLoading(true);
+    setIsLoading(payments.length === 0);
     try {
       const res: {
         items: PaymentModel[];

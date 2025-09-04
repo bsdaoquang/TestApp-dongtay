@@ -1,5 +1,13 @@
-import { View, Text, FlatList } from 'react-native';
+import firestore from '@react-native-firebase/firestore';
 import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, FlatList, View } from 'react-native';
+import Toast from 'react-native-toast-message';
+import {
+  BitcointBag,
+  Calendar,
+  ChartPieOutline,
+  StreamlineCyberPersion,
+} from '../../../assets/icons';
 import {
   Button,
   Card,
@@ -11,26 +19,16 @@ import {
   TextComponent,
   TimeLineItem,
 } from '../../components';
+import { colors } from '../../constants/colors';
+import { fontFamilies } from '../../constants/fontFamilies';
+import { createDoc, updateDoc } from '../../firebase/server';
+import { HistoryModel } from '../../models/HistoryModel';
 import {
   PaymentModel,
   TENTINHTRANG,
   TINHTRANGID,
 } from '../../models/PaymentModel';
-import { fontFamilies } from '../../constants/fontFamilies';
-import firestore, { orderBy } from '@react-native-firebase/firestore';
-import {
-  BitcointBag,
-  Calendar,
-  ChartPieOutline,
-  Pin,
-  StreamlineCyberPersion,
-} from '../../../assets/icons';
 import { getDateString } from '../../utils/datetime';
-import { colors } from '../../constants/colors';
-import { createDoc, updateDoc } from '../../firebase/server';
-import Toast from 'react-native-toast-message';
-import { HistoryModel } from '../../models/HistoryModel';
-import Timeline from 'react-native-timeline-flatlist';
 
 const PaymentApprove = ({ navigation, route }: any) => {
   /*
@@ -44,6 +42,7 @@ const PaymentApprove = ({ navigation, route }: any) => {
   const [payment, setPayment] = useState<PaymentModel | null>(null);
   const [isUpdating, setIsUpdating] = useState(false);
   const [histories, setHistories] = useState<HistoryModel[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (paymentId) {
@@ -53,20 +52,33 @@ const PaymentApprove = ({ navigation, route }: any) => {
   }, [paymentId]);
 
   const getPaymentDetailById = () => {
-    firestore()
+    // Sử dụng onSnapshot để lắng nghe realtime thay đổi của document
+    setIsLoading(true);
+    const unsubscribe = firestore()
       .collection('thanhtoan')
       .doc(paymentId)
-      .onSnapshot(doc => {
-        if (doc.exists()) {
-          const paymentDetail: any = doc.data();
-          setPayment(paymentDetail);
-        }
-      });
+      .onSnapshot(
+        doc => {
+          if (doc.exists()) {
+            const paymentDetail: any = doc.data();
+            setPayment(paymentDetail);
+          } else {
+            setPayment(null);
+          }
+          setIsLoading(false);
+        },
+        error => {
+          setIsLoading(false);
+          console.log(error);
+        },
+      );
+    // Cleanup listener when component unmounts
+    return unsubscribe;
   };
 
   const getHistoriesChangeStatus = () => {
     // Sử dụng onSnapshot để lắng nghe realtime thay đổi của collection 'histories'
-
+    // get theo thứ tự createdAt giảm dần
     firestore()
       .collection('histories')
       .where('paymentId', '==', paymentId)
@@ -159,7 +171,16 @@ const PaymentApprove = ({ navigation, route }: any) => {
     </Row>
   );
 
-  return payment ? (
+  return isLoading ? (
+    <>
+      <Section>
+        <ActivityIndicator />
+        <Row justify="center">
+          <TextComponent text="Đang tải..." />
+        </Row>
+      </Section>
+    </>
+  ) : payment ? (
     <Container
       back
       title={`Thanh toán đợt: ${payment.STT}`}
@@ -238,7 +259,7 @@ const PaymentApprove = ({ navigation, route }: any) => {
       </Card>
       <Card radius={0} styles={{ flex: 1 }}>
         <FlatList
-          data={histories}
+          data={histories.sort((a: any, b: any) => b.createdAt - a.createdAt)}
           renderItem={({ item }) => <TimeLineItem item={item} />}
         />
       </Card>

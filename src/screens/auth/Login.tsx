@@ -100,10 +100,11 @@ const Login = ({ navigation }: any) => {
 
       // Call your login API here
       dispatch(
-        addAuth({
-          email,
-          password,
-        }),
+        addAuth(
+          isSavePass
+            ? { email, password, accesstoken: 'accesstoken' }
+            : { accesstoken: 'access_token_example' },
+        ),
       );
     } catch (error) {
       setError({
