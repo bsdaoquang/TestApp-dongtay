@@ -3,13 +3,21 @@ import CheckBox from '@react-native-community/checkbox';
 import React, { useEffect, useState } from 'react';
 import { Image, ScrollView, TouchableOpacity, View } from 'react-native';
 import { useDispatch } from 'react-redux';
-import { FingerPrintOutline, QuocKy } from '../../../assets/icons';
+import {
+  FingerPrintOutline,
+  MdiCustomerSupport,
+  MdiQrCode,
+  MdiUserAddOutline,
+  QuocKy,
+} from '../../../assets/icons';
 import {
   Button,
+  Col,
   Input,
   Loading,
   Row,
   Section,
+  Space,
   TextComponent,
 } from '../../components';
 import { colors } from '../../constants/colors';
@@ -17,8 +25,6 @@ import { fontFamilies } from '../../constants/fontFamilies';
 import { addAuth } from '../../store/reducers/authReducer';
 import { globalStyles } from '../../styles/globalStyle';
 import { isValidEmail } from '../../utils/validate';
-import { Notifications } from '../../utils/notifications';
-import messaging from '@react-native-firebase/messaging';
 
 const Login = ({ navigation }: any) => {
   const [email, setEmail] = useState('');
@@ -32,11 +38,28 @@ const Login = ({ navigation }: any) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    checkUserDataInLocal();
+  }, []);
+
+  useEffect(() => {
     setError({
       isError: false,
       message: '',
     });
   }, [email, password]);
+
+  const checkUserDataInLocal = async () => {
+    try {
+      const res = await AsyncStorage.getItem('user');
+      if (res) {
+        const user = JSON.parse(res);
+        setEmail(user.email);
+        setPassword(user.password);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleLogin = async () => {
     setIsLoading(true);
@@ -71,6 +94,8 @@ const Login = ({ navigation }: any) => {
             password,
           }),
         );
+      } else {
+        await AsyncStorage.removeItem('user');
       }
 
       // Call your login API here
@@ -173,40 +198,60 @@ const Login = ({ navigation }: any) => {
               <TextComponent text="Quên mật khẩu?" />
             </TouchableOpacity>
           </Row>
-          <Row justify="center" style={{ marginTop: 30 }}>
-            <TextComponent text="Bạn chưa có tài khoản? " />
-            <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-              <TextComponent color={colors.primary} text="Đăng ký" />
-            </TouchableOpacity>
-          </Row>
         </Section>
       </ScrollView>
-      <Row
-        style={[
-          globalStyles.center,
-          {
-            backgroundColor: `${colors.primary}33`,
-            paddingVertical: 12,
-            minHeight: 68,
-          },
-        ]}
-      >
-        <TouchableOpacity
+      <View>
+        <Row
           style={[
             globalStyles.center,
             {
-              position: 'absolute',
-              top: -20,
-              width: 48,
-              height: 48,
-              borderRadius: 100,
-              backgroundColor: colors.primary,
+              backgroundColor: `${colors.primary}33`,
+              paddingVertical: 12,
+              minHeight: 68,
             },
           ]}
         >
-          <FingerPrintOutline />
-        </TouchableOpacity>
-      </Row>
+          <TouchableOpacity
+            style={[
+              globalStyles.center,
+              {
+                position: 'absolute',
+                top: -20,
+                width: 48,
+                height: 48,
+                borderRadius: 100,
+                backgroundColor: colors.primary,
+              },
+            ]}
+          >
+            <FingerPrintOutline />
+          </TouchableOpacity>
+        </Row>
+        <Row>
+          <Col
+            onPress={() => navigation.navigate('Register')}
+            styles={[globalStyles.center, { paddingVertical: 12 }]}
+          >
+            <MdiUserAddOutline />
+            <TextComponent text="Đăng ký" />
+          </Col>
+          <Col
+            onPress={() => navigation.navigate('Support')}
+            styles={[globalStyles.center, { paddingVertical: 12 }]}
+          >
+            <MdiCustomerSupport />
+            <TextComponent text="Hỗ trợ" />
+          </Col>
+          <Col
+            onPress={() => navigation.navigate('QrCodeScanner')}
+            styles={[globalStyles.center, { paddingVertical: 12 }]}
+          >
+            <MdiQrCode />
+            <Space height={2} />
+            <TextComponent text="Qr code" />
+          </Col>
+        </Row>
+      </View>
       {isLoading && <Loading />}
     </View>
   );

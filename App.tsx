@@ -1,6 +1,7 @@
 import { NavigationContainer } from '@react-navigation/native';
 import React, { useEffect } from 'react';
-import { StatusBar, View } from 'react-native';
+import { StatusBar } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Toast, { BaseToast } from 'react-native-toast-message';
 import { Provider } from 'react-redux';
 import { colors } from './src/constants/colors';
@@ -62,15 +63,9 @@ const App = () => {
   return (
     <Provider store={store}>
       <NavigationContainer>
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: colors.bg,
-            paddingBottom: (StatusBar.currentHeight ?? 0) + 15,
-          }}
-        >
+        <SafeAreaView style={[globalStyles.container]}>
           <Routers />
-        </View>
+        </SafeAreaView>
         <Toast config={toastConfig} />
       </NavigationContainer>
     </Provider>

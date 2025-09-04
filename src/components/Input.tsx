@@ -48,8 +48,8 @@ const Input = (props: InputProps) => {
   });
 
   useEffect(() => {
-    onChange(inputValue);
-  }, [inputValue]);
+    setInputValue(value);
+  }, [value]);
 
   const handleClear = () => {
     setInputValue('');
@@ -81,7 +81,9 @@ const Input = (props: InputProps) => {
           placeholder={required ? `* ${placeholder}` : placeholder}
           placeholderTextColor={colors.placeholder}
           value={inputValue}
-          onChangeText={setInputValue}
+          onChangeText={text => {
+            onChange(text);
+          }}
           style={[globalStyles.inputStyle, inputStyle]}
           secureTextEntry={isSecure}
           onBlur={
@@ -97,7 +99,7 @@ const Input = (props: InputProps) => {
               : undefined
           }
         />
-        {allowClear && inputValue.length > 0 && (
+        {allowClear && inputValue && inputValue.length > 0 && (
           <TouchableOpacity onPress={handleClear}>
             <CloseCircle
               size={18}

@@ -56,7 +56,7 @@ const Home = ({ navigation }: any) => {
       dispatch(updateAuth({ ...user, fcmtoken: fcmToken }));
       await AsyncStorage.setItem(
         'user',
-        JSON.stringify({ ...user, fcmtoken: fcmToken }),
+        JSON.stringify({ fcmtoken: fcmToken }),
       );
     }
   };
